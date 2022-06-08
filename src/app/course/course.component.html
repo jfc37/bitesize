@@ -1,0 +1,34 @@
+<section class="double-column">
+  <aside [ngClass]="{ open: isTabletMenuOpen }">
+    <button class="tabletAndDown" (click)="toggleTabletMenu()">
+      {{ isTabletMenuOpen ? "close" : "open" }}
+    </button>
+    <div *ngIf="loadingAside$ | async">loading...</div>
+    <nav>
+      <ol>
+        <li><h5>Component Testing</h5></li>
+        <li *ngFor="let page of pageSummaries$ | async">
+          <a
+            routerLinkActive="active"
+            [routerLink]="page.slug | slugToCourseLink"
+            >{{ page.title }}</a
+          >
+        </li>
+      </ol>
+    </nav>
+  </aside>
+  <section *ngIf="page$ | async as page">
+    <main>
+      <h2>{{ page.pageName }}</h2>
+    </main>
+    <footer>
+      <div></div>
+      <a
+        *ngIf="page.nextPage"
+        [routerLink]="page.nextPage.slug | slugToCourseLink"
+      >
+        {{ page.nextPage.title }}
+      </a>
+    </footer>
+  </section>
+</section>

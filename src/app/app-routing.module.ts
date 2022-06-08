@@ -10,6 +10,11 @@ const routes: Routes = [
         (m) => m.CourseSelectionModule
       ),
   },
+  {
+    path: 'courses',
+    loadChildren: () =>
+      import('./course/course.module').then((m) => m.CourseModule),
+  },
 ];
 
 @NgModule({

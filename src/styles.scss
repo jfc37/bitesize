@@ -1,4 +1,91 @@
 // CSS reset
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  font: inherit;
+  vertical-align: baseline;
+}
 
 /*
   1. Use a more-intuitive box-sizing model.
@@ -75,9 +162,19 @@ h6 {
 :root {
   --single-column-width: min(900px, 100vw - 4rem);
 
+  --colour-text-background-invert-h: 222deg;
+  --colour-text-background-invert-s: 22%;
+  --colour-text-background-invert-l: 5%;
+
   --colour-background: hsl(30, 100%, 0%);
   --colour-text-background: hsl(0deg, 0%, 95%);
   --colour-text: hsl(222deg, 22%, 5%);
+  --colour-text-background-invert: hsl(
+    var(--colour-text-background-invert-h),
+    var(--colour-text-background-invert-s),
+    var(--colour-text-background-invert-l)
+  );
+  --colour-text-invert: hsl(0deg, 0%, 95%);
 }
 
 html {
@@ -85,13 +182,11 @@ html {
 } /*18px*/
 
 body {
-  background: var(--colour-background);
+  background: var(--colour-text-background-invert);
+  color: var(--colour-text-invert);
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   line-height: 1.75;
-  color: var(--colour-text);
-
-  padding: 2rem 0;
 }
 
 p {
@@ -135,9 +230,24 @@ small,
   font-size: 0.75rem;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 h1 {
   background-color: var(--colour-text-background);
   border-radius: 1rem;
+}
+
+ol,
+li {
+  list-style: none;
+}
+
+main {
+  background-color: var(--colour-text-background);
+  color: var(--colour-text);
 }
 
 .single-column {
@@ -145,8 +255,49 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   background-color: var(--colour-text-background);
+  color: var(--colour-text);
 
   height: 100%;
   border-radius: 1.5rem;
   padding: 1rem;
+}
+
+a {
+  display: flex;
+  padding: 0.5rem;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: hsl(
+      var(--colour-text-background-invert-h),
+      var(--colour-text-background-invert-s),
+      calc(
+        var(--colour-text-background-invert-l) +
+          (100% - var(--colour-text-background-invert-l)) * 0.4
+      )
+    );
+  }
+}
+
+.tabletAndDown {
+  display: none;
+}
+
+// Laptop styles
+@media (max-width: 81.25rem) {
+}
+
+// Tablet styles
+@media (max-width: 59.375rem) {
+  .laptopAndUp {
+    display: none;
+  }
+
+  .tabletAndDown {
+    display: inherit;
+  }
+}
+
+// Mobile styles
+@media (max-width: 37.5rem) {
 }

@@ -1,8 +1,11 @@
 <main class="single-column">
   <h1>Bite sized courses</h1>
 
+  <div *ngIf="loading$ | async">loading...</div>
+
   <ul>
-    <li>TDD step by step</li>
-    <li>Marble testing</li>
+    <li *ngFor="let summary of summaries$ | async">
+      <a [routerLink]="summary.slug | slugToCourseLink">{{ summary.name }}</a>
+    </li>
   </ul>
 </main>

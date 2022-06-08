@@ -1,0 +1,87 @@
+.double-column {
+  position: relative;
+  display: flex;
+
+  height: 100%;
+  padding: 1rem;
+}
+
+aside {
+  color: var(--colour-text-invert);
+  background-color: var(--colour-text-background-invert);
+  flex-basis: 16rem;
+  padding-right: 0.25rem;
+
+  h5 {
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  a {
+    margin-top: 0.25rem;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+
+    &:hover,
+    &.active {
+      background-color: hsl(
+        var(--colour-text-background-invert-h),
+        var(--colour-text-background-invert-s),
+        calc(
+          var(--colour-text-background-invert-l) +
+            (100% - var(--colour-text-background-invert-l)) * 0.4
+        )
+      );
+    }
+  }
+}
+
+section {
+  flex: 1;
+}
+
+main {
+  background-color: var(--colour-text-background);
+
+  height: 100%;
+  border-radius: 1.5rem;
+  padding: 1rem;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 0;
+}
+
+// Laptop styles
+@media (max-width: 81.25rem) {
+}
+
+// Tablet styles
+@media (max-width: 59.375rem) {
+  main {
+    margin-left: 4rem;
+  }
+
+  aside {
+    position: absolute;
+    height: 100%;
+
+    ol {
+      display: none;
+    }
+
+    &.open {
+      width: 19rem;
+
+      ol {
+        display: inherit;
+      }
+    }
+  }
+}
+
+// Mobile styles
+@media (max-width: 37.5rem) {
+}
