@@ -20,6 +20,7 @@
   <section *ngIf="page$ | async as page">
     <main>
       <h2>{{ page.pageName }}</h2>
+      <div [innerHTML]="page.content | markdown"></div>
     </main>
     <footer>
       <div></div>

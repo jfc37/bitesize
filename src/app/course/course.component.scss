@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
 
-  height: 100%;
   padding: 1rem;
 }
 
@@ -43,7 +42,6 @@ section {
 main {
   background-color: var(--colour-text-background);
 
-  height: 100%;
   border-radius: 1.5rem;
   padding: 1rem;
 }
@@ -66,7 +64,6 @@ footer {
 
   aside {
     position: absolute;
-    height: 100%;
 
     ol {
       display: none;

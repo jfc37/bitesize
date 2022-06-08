@@ -30,7 +30,6 @@ export class CourseComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    console.error('xxx');
     this.pageSummaries$ = this.route.params.pipe(
       map((params) => [params['authorSlug'], params['courseSlug']].join('/')),
       distinctUntilChanged(),
