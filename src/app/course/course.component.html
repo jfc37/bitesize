@@ -1,4 +1,11 @@
-<section *ngIf="course$ | async as course" class="double-column">
+<button (click)="toggleEditMode()">
+  {{ editMode ? "Read Mode" : "Edit Mode" }}
+</button>
+<section
+  *ngIf="course$ | async as course"
+  class="double-column"
+  [ngClass]="{ editable: editMode }"
+>
   <aside [ngClass]="{ open: isTabletMenuOpen }">
     <button class="tabletAndDown" (click)="toggleTabletMenu()">
       {{ isTabletMenuOpen ? "close" : "open" }}
@@ -19,9 +26,10 @@
       </ol>
     </nav>
   </aside>
-  <section *ngIf="page$ | async as page">
+  <section *ngIf="page$ | async as page" [formGroup]="pageFormGroup">
     <main>
-      <h2>{{ page.name }}</h2>
+      <h2 class="read">{{ page.name }}</h2>
+      <h2 class="edit"><input type="text" formControlName="name" /></h2>
       <div
         *ngFor="let content of page.sections"
         [innerHTML]="content | markdown"

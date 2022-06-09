@@ -4,6 +4,7 @@ import {
   Firestore,
   collectionData,
   doc,
+  updateDoc,
   docData,
 } from '@angular/fire/firestore';
 import { traceUntilFirst } from '@angular/fire/performance';
@@ -54,5 +55,14 @@ export class CourseService {
       tap(console.log.bind(null, 'getCourse')),
       traceUntilFirst('firestore')
     );
+  }
+
+  public updateCourse(page: Page): void {
+    console.error('xxxx', page);
+    const ref = doc(
+      this.firestore,
+      `creators/joe-c/courses/component-tdd/pages/intro`
+    );
+    updateDoc(ref, { name: page.name });
   }
 }

@@ -52,6 +52,19 @@ footer {
   padding: 2rem 0;
 }
 
+.edit {
+  display: none;
+}
+.editable {
+  .read {
+    display: none;
+  }
+
+  .edit {
+    display: inherit;
+  }
+}
+
 // Laptop styles
 @media (max-width: 81.25rem) {
 }
