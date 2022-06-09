@@ -103,6 +103,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "bitesize:build:production",
+            "firebaseProject": "bite-size-lessons",
+            "firebaseHostingSite": "bite-size-lessons"
+          }
         }
       }
     }

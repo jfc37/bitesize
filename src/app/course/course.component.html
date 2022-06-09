@@ -1,17 +1,19 @@
-<section class="double-column">
+<section *ngIf="course$ | async as course" class="double-column">
   <aside [ngClass]="{ open: isTabletMenuOpen }">
     <button class="tabletAndDown" (click)="toggleTabletMenu()">
       {{ isTabletMenuOpen ? "close" : "open" }}
     </button>
-    <div *ngIf="loadingAside$ | async">loading...</div>
+    <div *ngIf="loading$ | async">loading...</div>
     <nav>
       <ol>
-        <li><h5>Component Testing</h5></li>
-        <li *ngFor="let page of pageSummaries$ | async">
+        <li>
+          <h5>{{ course.name }}</h5>
+        </li>
+        <li *ngFor="let page of pages$ | async">
           <a
             routerLinkActive="active"
             [routerLink]="page.slug | slugToCourseLink"
-            >{{ page.title }}</a
+            >{{ page.name }}</a
           >
         </li>
       </ol>
@@ -19,17 +21,24 @@
   </aside>
   <section *ngIf="page$ | async as page">
     <main>
-      <h2>{{ page.pageName }}</h2>
-      <div [innerHTML]="page.content | markdown"></div>
+      <h2>{{ page.name }}</h2>
+      <div
+        *ngFor="let content of page.sections"
+        [innerHTML]="content | markdown"
+      ></div>
     </main>
     <footer>
       <div></div>
       <a
-        *ngIf="page.nextPage"
-        [routerLink]="page.nextPage.slug | slugToCourseLink"
+        *ngIf="nextPage$ | async as nextPage; else backToSelection"
+        [routerLink]="nextPage.slug | slugToCourseLink"
       >
-        {{ page.nextPage.title }}
+        {{ nextPage.name }}
       </a>
+
+      <ng-template #backToSelection>
+        <a routerLink="/course-selection"> Find another course </a>
+      </ng-template>
     </footer>
   </section>
 </section>

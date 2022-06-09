@@ -4,11 +4,12 @@ import {
   distinctUntilChanged,
   map,
   Observable,
+  shareReplay,
   startWith,
   switchMap,
 } from 'rxjs';
 import { CourseService } from '../services/course.service';
-import { CoursePageSummary, PageContent } from '../types/courses';
+import { Course, Page } from '../types/courses';
 
 @Component({
   selector: 'app-course',
@@ -16,47 +17,66 @@ import { CoursePageSummary, PageContent } from '../types/courses';
   styleUrls: ['./course.component.scss'],
 })
 export class CourseComponent implements OnInit {
-  public loadingAside$!: Observable<boolean>;
-  public loadingContent$!: Observable<boolean>;
-
-  public pageSummaries$!: Observable<CoursePageSummary[]>;
-  public page$!: Observable<PageContent>;
-  public courseName$!: Observable<string>;
+  public course$!: Observable<Course>;
   public isTabletMenuOpen = false;
+  public loading$!: Observable<boolean>;
+  public pages$!: Observable<Page[]>;
+  public page$!: Observable<Page>;
+  public nextPage$!: Observable<Page | undefined>;
 
   constructor(
     private courseService: CourseService,
     private route: ActivatedRoute
   ) {}
 
+  private readonly authorCourseSlugs$ = this.route.params.pipe(
+    map((params) => [params['authorSlug'], params['courseSlug']].join('|')),
+    distinctUntilChanged(),
+    map((slug) => slug.split('|'))
+  );
+
+  private readonly authorCoursePageSlugs$ = this.route.params.pipe(
+    map((params) =>
+      [params['authorSlug'], params['courseSlug'], params['pageSlug']].join('/')
+    ),
+    distinctUntilChanged()
+  );
+
   public ngOnInit(): void {
-    this.pageSummaries$ = this.route.params.pipe(
-      map((params) => [params['authorSlug'], params['courseSlug']].join('/')),
-      distinctUntilChanged(),
-      switchMap((slug) => this.courseService.getCoursePageSummaries(slug))
-    );
-
-    this.page$ = this.route.params.pipe(
-      map((params) =>
-        [params['authorSlug'], params['courseSlug'], params['pageSlug']].join(
-          '/'
-        )
+    this.course$ = this.authorCourseSlugs$.pipe(
+      switchMap(([creatorSlug, courseSlug]) =>
+        this.courseService.getCourse(creatorSlug, courseSlug)
       ),
-      distinctUntilChanged(),
-      switchMap((slug) => this.courseService.getPageContent(slug))
+      shareReplay(1)
     );
 
-    this.courseName$ = this.page$.pipe(
-      map((content) => content.courseName),
-      startWith('loading...')
+    this.pages$ = this.authorCourseSlugs$.pipe(
+      switchMap(([creatorSlug, courseSlug]) =>
+        this.courseService.getPages(creatorSlug, courseSlug)
+      ),
+      shareReplay(1)
     );
 
-    this.loadingAside$ = this.pageSummaries$.pipe(
-      map(() => false),
-      startWith(true)
+    this.page$ = this.authorCoursePageSlugs$.pipe(
+      switchMap((slug) =>
+        this.pages$.pipe(
+          map((pages) => pages.find((page) => page.slug === slug)!)
+        )
+      )
     );
 
-    this.loadingContent$ = this.page$.pipe(
+    this.nextPage$ = this.page$.pipe(
+      map((page) => page.number),
+      switchMap((currentPageNumber) =>
+        this.pages$.pipe(
+          map((pages) =>
+            pages.find((page) => page.number == currentPageNumber + 1)
+          )
+        )
+      )
+    );
+
+    this.loading$ = this.course$.pipe(
       map(() => false),
       startWith(true)
     );

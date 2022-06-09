@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "bite-size-lessons": {
+      "hosting": {
+        "bitesize": [
+          "bite-size-lessons"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "bite-size-lessons"
+  }
+}

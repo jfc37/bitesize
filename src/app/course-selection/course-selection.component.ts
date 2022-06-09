@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, shareReplay, startWith } from 'rxjs';
 import { CourseService } from '../services/course.service';
 import { CourseSummary } from '../types/courses';
 
@@ -15,7 +15,7 @@ export class CourseSelectionComponent implements OnInit {
   constructor(private courseService: CourseService) {}
 
   public ngOnInit(): void {
-    this.summaries$ = this.courseService.getAllSummaries();
+    this.summaries$ = this.courseService.getAllSummaries().pipe(shareReplay(1));
 
     this.loading$ = this.summaries$.pipe(
       map(() => false),
