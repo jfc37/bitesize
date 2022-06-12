@@ -1,0 +1,7 @@
+<main>
+  <h2>{{ page.name }}</h2>
+  <div
+    *ngFor="let content of page.sections"
+    [innerHTML]="content | markdown"
+  ></div>
+</main>

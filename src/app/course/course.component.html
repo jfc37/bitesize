@@ -26,23 +26,16 @@
       </ol>
     </nav>
   </aside>
-  <section *ngIf="page$ | async as page" [formGroup]="pageFormGroup">
+  <section *ngIf="page$ | async as page">
     <main>
-      <h2 class="read">{{ page.name }}</h2>
-      <h2 class="edit"><input type="text" formControlName="name" /></h2>
-      <div
-        *ngFor="let content of page.sections"
-        class="read"
-        [innerHTML]="content | markdown"
-      ></div>
-      <ng-container formArrayName="sections">
-        <fieldset
-          *ngFor="let content of page.sections; let i = index"
-          class="edit"
-        >
-          <textarea [formControlName]="i" cols="30" rows="10"></textarea>
-        </fieldset>
-      </ng-container>
+      <app-edit-content
+        *ngIf="editMode; else viewMode"
+        [page]="page"
+        (pageUpdated)="pageUpdated($event)"
+      ></app-edit-content>
+      <ng-template #viewMode>
+        <app-view-content [page]="page"></app-view-content>
+      </ng-template>
     </main>
     <footer>
       <div></div>

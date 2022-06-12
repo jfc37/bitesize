@@ -1,0 +1,8 @@
+<ng-container [formGroup]="pageFormGroup">
+  <h2><input type="text" formControlName="name" /></h2>
+  <ng-container formArrayName="sections">
+    <fieldset *ngFor="let content of page.sections; let i = index">
+      <textarea [formControlName]="i" cols="30" rows="10"></textarea>
+    </fieldset>
+  </ng-container>
+</ng-container>

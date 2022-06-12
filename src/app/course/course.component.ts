@@ -21,10 +21,6 @@ import { Course, Page } from '../types/courses';
 export class CourseComponent implements OnInit {
   public course$!: Observable<Course>;
   public isTabletMenuOpen = false;
-  public pageFormGroup = new FormGroup({
-    name: new FormControl('', { updateOn: 'blur' }),
-    sections: new FormArray([new FormControl('', { updateOn: 'blur' })]),
-  });
   public editMode = false;
   public loading$!: Observable<boolean>;
   public pages$!: Observable<Page[]>;
@@ -50,10 +46,6 @@ export class CourseComponent implements OnInit {
   );
 
   public ngOnInit(): void {
-    this.pageFormGroup.valueChanges.subscribe((value) =>
-      this.courseService.updateCourse(value as any)
-    );
-
     this.course$ = this.authorCourseSlugs$.pipe(
       switchMap(([creatorSlug, courseSlug]) =>
         this.courseService.getCourse(creatorSlug, courseSlug)
@@ -73,15 +65,6 @@ export class CourseComponent implements OnInit {
         this.pages$.pipe(
           map((pages) => pages.find((page) => page.slug === slug)!)
         )
-      ),
-      tap((page) =>
-        this.pageFormGroup.patchValue(
-          {
-            name: page.name,
-            sections: page.sections,
-          },
-          { emitEvent: false }
-        )
       )
     );
 
@@ -100,6 +83,10 @@ export class CourseComponent implements OnInit {
       map(() => false),
       startWith(true)
     );
+  }
+
+  public pageUpdated(updatedPage: Page): void {
+    this.courseService.updateCourse(updatedPage);
   }
 
   public toggleEditMode(): void {
