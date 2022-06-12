@@ -39,16 +39,10 @@
     </main>
     <footer>
       <div></div>
-      <a
-        *ngIf="nextPage$ | async as nextPage; else backToSelection"
-        [routerLink]="nextPage.slug | slugToCourseLink"
-      >
-        {{ nextPage.name }}
-      </a>
-
-      <ng-template #backToSelection>
-        <a routerLink="/course-selection"> Find another course </a>
-      </ng-template>
+      <app-next-page
+        [pages]="(pages$ | async)!"
+        [currentPage]="page"
+      ></app-next-page>
     </footer>
   </section>
 </section>

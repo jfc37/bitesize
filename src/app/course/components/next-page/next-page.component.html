@@ -1,0 +1,10 @@
+<a
+  *ngIf="nextPage; else backToSelection"
+  [routerLink]="nextPage.slug | slugToCourseLink"
+>
+  {{ nextPage.name }}
+</a>
+
+<ng-template #backToSelection>
+  <a routerLink="/course-selection"> Find another course </a>
+</ng-template>

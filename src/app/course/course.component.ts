@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   distinctUntilChanged,
@@ -25,7 +24,6 @@ export class CourseComponent implements OnInit {
   public loading$!: Observable<boolean>;
   public pages$!: Observable<Page[]>;
   public page$!: Observable<Page>;
-  public nextPage$!: Observable<Page | undefined>;
 
   constructor(
     private courseService: CourseService,
@@ -64,17 +62,6 @@ export class CourseComponent implements OnInit {
       switchMap((slug) =>
         this.pages$.pipe(
           map((pages) => pages.find((page) => page.slug === slug)!)
-        )
-      )
-    );
-
-    this.nextPage$ = this.page$.pipe(
-      map((page) => page.number),
-      switchMap((currentPageNumber) =>
-        this.pages$.pipe(
-          map((pages) =>
-            pages.find((page) => page.number == currentPageNumber + 1)
-          )
         )
       )
     );
