@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   distinctUntilChanged,
@@ -23,6 +23,7 @@ export class CourseComponent implements OnInit {
   public isTabletMenuOpen = false;
   public pageFormGroup = new FormGroup({
     name: new FormControl('', { updateOn: 'blur' }),
+    sections: new FormArray([new FormControl('', { updateOn: 'blur' })]),
   });
   public editMode = false;
   public loading$!: Observable<boolean>;
@@ -77,6 +78,7 @@ export class CourseComponent implements OnInit {
         this.pageFormGroup.patchValue(
           {
             name: page.name,
+            sections: page.sections,
           },
           { emitEvent: false }
         )

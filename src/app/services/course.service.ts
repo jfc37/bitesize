@@ -58,11 +58,10 @@ export class CourseService {
   }
 
   public updateCourse(page: Page): void {
-    console.error('xxxx', page);
     const ref = doc(
       this.firestore,
       `creators/joe-c/courses/component-tdd/pages/intro`
     );
-    updateDoc(ref, { name: page.name });
+    updateDoc(ref, { ...page });
   }
 }

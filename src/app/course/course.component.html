@@ -32,8 +32,17 @@
       <h2 class="edit"><input type="text" formControlName="name" /></h2>
       <div
         *ngFor="let content of page.sections"
+        class="read"
         [innerHTML]="content | markdown"
       ></div>
+      <ng-container formArrayName="sections">
+        <fieldset
+          *ngFor="let content of page.sections; let i = index"
+          class="edit"
+        >
+          <textarea [formControlName]="i" cols="30" rows="10"></textarea>
+        </fieldset>
+      </ng-container>
     </main>
     <footer>
       <div></div>
