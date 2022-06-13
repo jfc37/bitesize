@@ -1,8 +1,17 @@
 <ng-container [formGroup]="pageFormGroup">
   <h2><input type="text" formControlName="name" /></h2>
+  <fieldset>
+    <button (click)="addSection(0)">Add Section</button>
+  </fieldset>
   <ng-container formArrayName="sections">
-    <fieldset *ngFor="let content of page.sections; let i = index">
-      <textarea [formControlName]="i" cols="30" rows="10"></textarea>
-    </fieldset>
+    <ng-container *ngFor="let content of page.sections; let i = index">
+      <fieldset>
+        <textarea [formControlName]="i" cols="30" rows="10"></textarea>
+        <button (click)="removeSection(i)">Remove Section</button>
+      </fieldset>
+      <fieldset>
+        <button (click)="addSection(i + 1)">Add Section</button>
+      </fieldset>
+    </ng-container>
   </ng-container>
 </ng-container>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { Page } from 'src/app/types/courses';
 
 @Component({
@@ -16,11 +16,13 @@ export class EditContentComponent implements OnInit {
 
   public pageFormGroup!: FormGroup;
 
+  private get sectionsFormArray(): FormArray {
+    return this.pageFormGroup.get('sections') as FormArray;
+  }
+
   constructor(private formBuild: FormBuilder) {}
 
-  ngOnInit(): void {
-    console.error('xxx', this.page);
-
+  public ngOnInit(): void {
     this.pageFormGroup = this.formBuild.group(
       { ...this.page, sections: this.formBuild.array(this.page.sections) },
       { updateOn: 'blur' }
@@ -29,5 +31,13 @@ export class EditContentComponent implements OnInit {
     this.pageFormGroup.valueChanges.subscribe((value) =>
       this.pageUpdated.emit(value as Page)
     );
+  }
+
+  public addSection(index: number): void {
+    this.sectionsFormArray.insert(index, this.formBuild.control(''));
+  }
+
+  public removeSection(index: number): void {
+    this.sectionsFormArray.removeAt(index);
   }
 }

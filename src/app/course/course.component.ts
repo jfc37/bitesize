@@ -20,7 +20,7 @@ import { Course, Page } from '../types/courses';
 export class CourseComponent implements OnInit {
   public course$!: Observable<Course>;
   public isTabletMenuOpen = false;
-  public editMode = false;
+  public editMode = true;
   public loading$!: Observable<boolean>;
   public pages$!: Observable<Page[]>;
   public page$!: Observable<Page>;
