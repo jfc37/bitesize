@@ -1,0 +1,14 @@
+<nav>
+  <ol>
+    <li>
+      <h5>{{ courseName }}</h5>
+    </li>
+    <li *ngFor="let page of pages">
+      <a
+        routerLinkActive="active"
+        [routerLink]="page.slug | slugToCourseLink"
+        >{{ page.name }}</a
+      >
+    </li>
+  </ol>
+</nav>

@@ -11,29 +11,26 @@
       {{ isTabletMenuOpen ? "close" : "open" }}
     </button>
     <div *ngIf="loading$ | async">loading...</div>
-    <nav>
-      <ol>
-        <li>
-          <h5>{{ course.name }}</h5>
-        </li>
-        <li *ngFor="let page of pages$ | async">
-          <a
-            routerLinkActive="active"
-            [routerLink]="page.slug | slugToCourseLink"
-            >{{ page.name }}</a
-          >
-        </li>
-      </ol>
-    </nav>
+    <app-edit-navigation
+      *ngIf="editMode; else viewNavigation"
+      [courseName]="course.name"
+      [pages]="(pages$ | async)!"
+    ></app-edit-navigation>
+    <ng-template #viewNavigation>
+      <app-view-navigation
+        [courseName]="course.name"
+        [pages]="(pages$ | async)!"
+      ></app-view-navigation>
+    </ng-template>
   </aside>
   <section *ngIf="page$ | async as page">
     <main>
       <app-edit-content
-        *ngIf="editMode; else viewMode"
+        *ngIf="editMode; else viewContent"
         [page]="page"
         (pageUpdated)="pageUpdated($event)"
       ></app-edit-content>
-      <ng-template #viewMode>
+      <ng-template #viewContent>
         <app-view-content [page]="page"></app-view-content>
       </ng-template>
     </main>

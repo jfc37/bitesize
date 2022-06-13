@@ -1,0 +1,22 @@
+h5 {
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+a {
+  margin-top: 0.25rem;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+
+  &:hover,
+  &.active {
+    background-color: hsl(
+      var(--colour-text-background-invert-h),
+      var(--colour-text-background-invert-s),
+      calc(
+        var(--colour-text-background-invert-l) +
+          (100% - var(--colour-text-background-invert-l)) * 0.4
+      )
+    );
+  }
+}

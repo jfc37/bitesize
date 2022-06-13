@@ -24,7 +24,10 @@ export class EditContentComponent implements OnInit {
 
   public ngOnInit(): void {
     this.pageFormGroup = this.formBuild.group(
-      { ...this.page, sections: this.formBuild.array(this.page.sections) },
+      {
+        ...this.page,
+        sections: this.formBuild.array(this.page.sections || []),
+      },
       { updateOn: 'blur' }
     );
 

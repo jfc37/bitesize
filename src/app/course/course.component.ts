@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   distinctUntilChanged,
@@ -16,6 +16,7 @@ import { Course, Page } from '../types/courses';
   selector: 'app-course',
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CourseComponent implements OnInit {
   public course$!: Observable<Course>;
