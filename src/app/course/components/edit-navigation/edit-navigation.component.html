@@ -3,12 +3,27 @@
     <li>
       <h5>{{ courseName }}</h5>
     </li>
-    <li *ngFor="let page of pages">
-      <a
-        routerLinkActive="active"
-        [routerLink]="page.slug | slugToCourseLink"
-        >{{ page.name }}</a
-      >
+    <li>
+      <fieldset>
+        <button (click)="addPage.emit(1)">Add Page</button>
+      </fieldset>
     </li>
+    <ng-container *ngFor="let page of pages; let i = index">
+      <li>
+        <fieldset>
+          <a
+            routerLinkActive="active"
+            [routerLink]="page.slug | slugToCourseLink"
+            >{{ page.name }}</a
+          >
+          <button (click)="removePage.emit(page.number)">Remove Page</button>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <button (click)="addPage.emit(page.number + 1)">Add Page</button>
+        </fieldset>
+      </li>
+    </ng-container>
   </ol>
 </nav>

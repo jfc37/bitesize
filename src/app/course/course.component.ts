@@ -10,6 +10,7 @@ import {
   tap,
 } from 'rxjs';
 import { CourseService } from '../services/course.service';
+import { PageService } from '../services/page.service';
 import { Course, Page } from '../types/courses';
 
 @Component({
@@ -28,6 +29,7 @@ export class CourseComponent implements OnInit {
 
   constructor(
     private courseService: CourseService,
+    private pageService: PageService,
     private route: ActivatedRoute
   ) {}
 
@@ -47,7 +49,7 @@ export class CourseComponent implements OnInit {
   public ngOnInit(): void {
     this.course$ = this.authorCourseSlugs$.pipe(
       switchMap(([creatorSlug, courseSlug]) =>
-        this.courseService.getCourse(creatorSlug, courseSlug)
+        this.courseService.get(creatorSlug, courseSlug)
       ),
       shareReplay(1)
     );
@@ -73,8 +75,20 @@ export class CourseComponent implements OnInit {
     );
   }
 
+  public insertNewPage(pageNumber: number): void {
+    this.authorCourseSlugs$.subscribe(([creator, course]) =>
+      this.courseService.insertPage(creator, course, pageNumber)
+    );
+  }
+
+  public removePage(pageNumber: number): void {
+    this.authorCourseSlugs$.subscribe(([creator, course]) =>
+      this.courseService.removePage(creator, course, pageNumber)
+    );
+  }
+
   public pageUpdated(updatedPage: Page): void {
-    this.courseService.updatePage(updatedPage);
+    this.pageService.update(updatedPage);
   }
 
   public toggleEditMode(): void {

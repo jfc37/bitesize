@@ -4,11 +4,14 @@ import {
   Firestore,
   collectionData,
   doc,
-  updateDoc,
   docData,
+  addDoc,
+  updateDoc,
+  DocumentData,
 } from '@angular/fire/firestore';
 import { traceUntilFirst } from '@angular/fire/performance';
-import { map, Observable, tap } from 'rxjs';
+import { deleteDoc } from '@firebase/firestore';
+import { first, map, Observable, tap } from 'rxjs';
 import { Course, CourseSummary, Page } from '../types/courses';
 
 @Injectable({
@@ -43,10 +46,7 @@ export class CourseService {
     );
   }
 
-  public getCourse(
-    creatorSlug: string,
-    courseSlug: string
-  ): Observable<Course> {
+  public get(creatorSlug: string, courseSlug: string): Observable<Course> {
     const ref = doc(
       this.firestore,
       `creators/${creatorSlug}/courses/${courseSlug}`
@@ -57,17 +57,65 @@ export class CourseService {
     );
   }
 
-  public updatePage(page: Page): void {
-    const [creator, course, pageName] = page.slug.split('/');
-    const docPath = [
-      'creators',
-      creator,
-      'courses',
-      course,
-      'pages',
-      pageName,
-    ].join('/');
-    const ref = doc(this.firestore, docPath);
-    updateDoc(ref, { ...page });
+  public insertPage(creator: string, course: string, pageNumber: number): void {
+    collectionData(
+      collection(this.firestore, `creators/${creator}/courses/${course}/pages`),
+      { idField: 'slug' }
+    )
+      .pipe(
+        first(),
+        map((pages) => pages as Page[]),
+        map((pages: Page[]) =>
+          pages.filter((page) => page.number >= pageNumber)
+        )
+      )
+      .subscribe((pages) => {
+        pages.forEach((page) => {
+          const ref = doc(
+            this.firestore,
+            `creators/${creator}/courses/${course}/pages/${page.slug}`
+          );
+          updateDoc(ref, { number: page.number + 1 });
+        });
+
+        const pagesCollection = collection(
+          this.firestore,
+          `creators/${creator}/courses/${course}/pages`
+        );
+        addDoc(pagesCollection, {
+          sections: [],
+          number: pageNumber,
+          name: 'New Page',
+          slug: '',
+        } as Page);
+      });
+  }
+
+  public removePage(creator: string, course: string, pageNumber: number): void {
+    collectionData(
+      collection(this.firestore, `creators/${creator}/courses/${course}/pages`),
+      { idField: 'slug' }
+    )
+      .pipe(
+        first(),
+        map((pages) => pages as Page[]),
+        map((pages: Page[]) =>
+          pages.filter((page) => page.number >= pageNumber)
+        )
+      )
+      .subscribe((pages) => {
+        console.error('pages', pages);
+        pages.forEach((page) => {
+          const ref = doc(
+            this.firestore,
+            `creators/${creator}/courses/${course}/pages/${page.slug}`
+          );
+          if (page.number != pageNumber) {
+            updateDoc(ref, { number: page.number + 1 });
+          } else {
+            deleteDoc(ref);
+          }
+        });
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Page } from 'src/app/types/courses';
 
 @Component({
@@ -9,14 +9,16 @@ import { Page } from 'src/app/types/courses';
     './edit-navigation.component.scss',
   ],
 })
-export class EditNavigationComponent implements OnInit {
+export class EditNavigationComponent {
   @Input()
   public courseName!: string;
 
   @Input()
   public pages!: Page[];
 
-  constructor() {}
+  @Output()
+  public addPage = new EventEmitter<number>();
 
-  ngOnInit(): void {}
+  @Output()
+  public removePage = new EventEmitter<number>();
 }
