@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { marked } from 'marked';
 
 @Pipe({
@@ -10,5 +11,15 @@ export class MarkdownPipe implements PipeTransform {
       return marked.parse(value, { gfm: true });
     }
     return value;
+  }
+}
+
+@Pipe({
+  name: 'safe',
+})
+export class SafePipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
+  transform(value: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(value);
   }
 }

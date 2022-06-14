@@ -1,7 +1,13 @@
 <main>
   <h2>{{ page.name }}</h2>
-  <div
-    *ngFor="let content of page.sections"
-    [innerHTML]="content | markdown"
-  ></div>
+  <ng-container *ngFor="let content of page.sections">
+    <iframe
+      *ngIf="content.startsWith('https://stackblitz.com/'); else markdown"
+      [src]="content | safe"
+      frameborder="0"
+    ></iframe>
+    <ng-template #markdown
+      ><div [innerHTML]="content | markdown"></div
+    ></ng-template>
+  </ng-container>
 </main>
