@@ -74,7 +74,7 @@ export class CourseComponent implements OnInit {
   }
 
   public pageUpdated(updatedPage: Page): void {
-    this.courseService.updateCourse(updatedPage);
+    this.courseService.updatePage(updatedPage);
   }
 
   public toggleEditMode(): void {

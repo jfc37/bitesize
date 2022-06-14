@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { Page } from 'src/app/types/courses';
 
@@ -7,7 +15,7 @@ import { Page } from 'src/app/types/courses';
   templateUrl: './edit-content.component.html',
   styleUrls: ['./edit-content.component.scss'],
 })
-export class EditContentComponent implements OnInit {
+export class EditContentComponent implements OnInit, OnChanges {
   @Input()
   public page!: Page;
 
@@ -34,6 +42,12 @@ export class EditContentComponent implements OnInit {
     this.pageFormGroup.valueChanges.subscribe((value) =>
       this.pageUpdated.emit(value as Page)
     );
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes['page'] && !changes['page'].isFirstChange()) {
+      this.pageFormGroup.patchValue(this.page, { emitEvent: false });
+    }
   }
 
   public addSection(index: number): void {

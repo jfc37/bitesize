@@ -57,11 +57,17 @@ export class CourseService {
     );
   }
 
-  public updateCourse(page: Page): void {
-    const ref = doc(
-      this.firestore,
-      `creators/joe-c/courses/component-tdd/pages/intro`
-    );
+  public updatePage(page: Page): void {
+    const [creator, course, pageName] = page.slug.split('/');
+    const docPath = [
+      'creators',
+      creator,
+      'courses',
+      course,
+      'pages',
+      pageName,
+    ].join('/');
+    const ref = doc(this.firestore, docPath);
     updateDoc(ref, { ...page });
   }
 }
