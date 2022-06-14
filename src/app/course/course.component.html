@@ -30,7 +30,8 @@
       <app-edit-content
         *ngIf="editMode; else viewContent"
         [page]="page"
-        (pageUpdated)="pageUpdated($event)"
+        (titleUpdated)="titleUpdated($event)"
+        (sectionsUpdated)="sectionUpdated($event)"
       ></app-edit-content>
       <ng-template #viewContent>
         <app-view-content [page]="page"></app-view-content>

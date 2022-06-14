@@ -38,10 +38,12 @@ export class CourseService {
       tap(console.log.bind(null, 'getPages')),
       traceUntilFirst('firestore'),
       map((pages: Page[]) =>
-        pages.map((page) => ({
-          ...page,
-          slug: `${creatorSlug}/${courseSlug}/${page.slug}`,
-        }))
+        pages
+          .map((page) => ({
+            ...page,
+            slug: `${creatorSlug}/${courseSlug}/${page.slug}`,
+          }))
+          .sort((a, b) => (a.number < b.number ? -1 : 1))
       )
     );
   }
@@ -91,21 +93,21 @@ export class CourseService {
       });
   }
 
-  public removePage(creator: string, course: string, pageNumber: number): void {
-    collectionData(
+  public removePage(
+    creator: string,
+    course: string,
+    pageNumber: number
+  ): Observable<string> {
+    return collectionData(
       collection(this.firestore, `creators/${creator}/courses/${course}/pages`),
       { idField: 'slug' }
-    )
-      .pipe(
-        first(),
-        map((pages) => pages as Page[]),
-        map((pages: Page[]) =>
-          pages.filter((page) => page.number >= pageNumber)
-        )
-      )
-      .subscribe((pages) => {
-        console.error('pages', pages);
-        pages.forEach((page) => {
+    ).pipe(
+      first(),
+      map((pages) => pages as Page[]),
+      map((pages: Page[]) => {
+        const pagesToChange = pages.filter((page) => page.number >= pageNumber);
+
+        pagesToChange.forEach((page) => {
           const ref = doc(
             this.firestore,
             `creators/${creator}/courses/${course}/pages/${page.slug}`
@@ -116,6 +118,9 @@ export class CourseService {
             deleteDoc(ref);
           }
         });
-      });
+
+        return pages.find((x) => x.number != pageNumber)!.slug;
+      })
+    );
   }
 }

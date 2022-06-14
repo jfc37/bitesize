@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
+  combineLatestWith,
   distinctUntilChanged,
+  first,
   map,
   Observable,
   shareReplay,
@@ -30,7 +32,8 @@ export class CourseComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private pageService: PageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   private readonly authorCourseSlugs$ = this.route.params.pipe(
@@ -82,13 +85,39 @@ export class CourseComponent implements OnInit {
   }
 
   public removePage(pageNumber: number): void {
-    this.authorCourseSlugs$.subscribe(([creator, course]) =>
-      this.courseService.removePage(creator, course, pageNumber)
-    );
+    this.authorCourseSlugs$
+      .pipe(
+        first(),
+        switchMap(([creator, course]) =>
+          this.courseService.removePage(creator, course, pageNumber)
+        )
+      )
+      .subscribe((newPageSlug) => {
+        console.error('subscribe', newPageSlug);
+        this.router.navigate(['..', newPageSlug], { relativeTo: this.route });
+      });
   }
 
-  public pageUpdated(updatedPage: Page): void {
-    this.pageService.update(updatedPage);
+  public titleUpdated(title: string): void {
+    this.authorCoursePageSlugs$
+      .pipe(
+        first(),
+        map((slug) => slug.split('/')),
+        switchMap(([creator, course, page]) =>
+          this.pageService.updateName(creator, course, page, title)
+        )
+      )
+      .subscribe((newPageSlug) => {
+        this.router.navigate(['..', newPageSlug], { relativeTo: this.route });
+      });
+  }
+
+  public sectionUpdated(sections: string[]): void {
+    // this.authorCoursePageSlugs$
+    //   .pipe(map((slug) => slug.split('/')))
+    //   .subscribe(([creator, course, page]) =>
+    //     this.pageService.updateName(creator, course, page, title)
+    //   );
   }
 
   public toggleEditMode(): void {

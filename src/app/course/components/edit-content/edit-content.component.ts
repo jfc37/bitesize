@@ -8,6 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { pairwise, startWith } from 'rxjs';
 import { Page } from 'src/app/types/courses';
 
 @Component({
@@ -20,7 +21,10 @@ export class EditContentComponent implements OnInit, OnChanges {
   public page!: Page;
 
   @Output()
-  public pageUpdated = new EventEmitter<Page>();
+  public titleUpdated = new EventEmitter<string>();
+
+  @Output()
+  public sectionsUpdated = new EventEmitter<string[]>();
 
   public pageFormGroup!: FormGroup;
 
@@ -33,15 +37,21 @@ export class EditContentComponent implements OnInit, OnChanges {
   public ngOnInit(): void {
     this.pageFormGroup = this.formBuild.group(
       {
-        ...this.page,
+        name: this.page.name,
         sections: this.formBuild.array(this.page.sections || []),
       },
       { updateOn: 'blur' }
     );
 
-    this.pageFormGroup.valueChanges.subscribe((value) =>
-      this.pageUpdated.emit(value as Page)
-    );
+    this.pageFormGroup.valueChanges
+      .pipe(startWith(this.pageFormGroup.value), pairwise())
+      .subscribe(([previous, current]) => {
+        if (previous.name != current.name) {
+          this.titleUpdated.emit(current.name);
+        } else {
+          this.sectionsUpdated.emit(current.section);
+        }
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
