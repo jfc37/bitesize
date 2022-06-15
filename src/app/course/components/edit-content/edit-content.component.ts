@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { pairwise, startWith } from 'rxjs';
 import { Page } from 'src/app/types/courses';
 
@@ -57,6 +57,12 @@ export class EditContentComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['page'] && !changes['page'].isFirstChange()) {
       this.pageFormGroup.patchValue(this.page, { emitEvent: false });
+      this.sectionsFormArray.clear({ emitEvent: false });
+      this.page.sections.forEach((section) =>
+        this.sectionsFormArray.push(new FormControl(section), {
+          emitEvent: false,
+        })
+      );
     }
   }
 

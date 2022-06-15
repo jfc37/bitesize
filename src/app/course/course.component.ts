@@ -93,7 +93,6 @@ export class CourseComponent implements OnInit {
         )
       )
       .subscribe((newPageSlug) => {
-        console.error('subscribe', newPageSlug);
         this.router.navigate(['..', newPageSlug], { relativeTo: this.route });
       });
   }

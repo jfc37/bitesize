@@ -113,13 +113,16 @@ export class CourseService {
             `creators/${creator}/courses/${course}/pages/${page.slug}`
           );
           if (page.number != pageNumber) {
-            updateDoc(ref, { number: page.number + 1 });
+            updateDoc(ref, { number: page.number - 1 });
           } else {
             deleteDoc(ref);
           }
         });
 
-        return pages.find((x) => x.number != pageNumber)!.slug;
+        const newCurrentPage =
+          pages.find((x) => x.number == pageNumber - 1) ||
+          pages.find((x) => x.number == pageNumber + 1);
+        return newCurrentPage!.slug;
       })
     );
   }
