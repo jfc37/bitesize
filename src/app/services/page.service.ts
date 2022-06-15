@@ -44,4 +44,22 @@ export class PageService {
       })
     );
   }
+
+  public updateSections(
+    creator: string,
+    course: string,
+    page: string,
+    sections: string[]
+  ): void {
+    const docPath = [
+      'creators',
+      creator,
+      'courses',
+      course,
+      'pages',
+      page,
+    ].join('/');
+    const ref = doc(this.firestore, docPath);
+    updateDoc(ref, { sections });
+  }
 }

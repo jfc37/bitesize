@@ -113,11 +113,14 @@ export class CourseComponent implements OnInit {
   }
 
   public sectionUpdated(sections: string[]): void {
-    // this.authorCoursePageSlugs$
-    //   .pipe(map((slug) => slug.split('/')))
-    //   .subscribe(([creator, course, page]) =>
-    //     this.pageService.updateName(creator, course, page, title)
-    //   );
+    this.authorCoursePageSlugs$
+      .pipe(
+        first(),
+        map((slug) => slug.split('/'))
+      )
+      .subscribe(([creator, course, page]) =>
+        this.pageService.updateSections(creator, course, page, sections)
+      );
   }
 
   public toggleEditMode(): void {

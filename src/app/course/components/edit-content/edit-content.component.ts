@@ -49,7 +49,7 @@ export class EditContentComponent implements OnInit, OnChanges {
         if (previous.name != current.name) {
           this.titleUpdated.emit(current.name);
         } else {
-          this.sectionsUpdated.emit(current.section);
+          this.sectionsUpdated.emit(current.sections);
         }
       });
   }
