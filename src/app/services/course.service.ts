@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { traceUntilFirst } from '@angular/fire/performance';
 import { deleteDoc } from '@firebase/firestore';
-import { first, map, Observable, tap } from 'rxjs';
+import { debounceTime, first, map, Observable, tap } from 'rxjs';
 import { Course, CourseSummary, Page } from '../types/courses';
 
 @Injectable({
@@ -35,6 +35,7 @@ export class CourseService {
       ),
       { idField: 'slug' }
     ).pipe(
+      debounceTime(400),
       tap(console.log.bind(null, 'getPages')),
       traceUntilFirst('firestore'),
       map((pages: Page[]) =>

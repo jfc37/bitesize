@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -15,6 +16,7 @@ import { Page } from 'src/app/types/courses';
   selector: 'app-edit-content',
   templateUrl: './edit-content.component.html',
   styleUrls: ['./edit-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditContentComponent implements OnInit, OnChanges {
   @Input()
@@ -43,26 +45,30 @@ export class EditContentComponent implements OnInit, OnChanges {
       { updateOn: 'blur' }
     );
 
-    this.pageFormGroup.valueChanges
-      .pipe(startWith(this.pageFormGroup.value), pairwise())
-      .subscribe(([previous, current]) => {
-        if (previous.name != current.name) {
-          this.titleUpdated.emit(current.name);
-        } else {
-          this.sectionsUpdated.emit(current.sections);
-        }
-      });
+    this.pageFormGroup.valueChanges.subscribe((value) => {
+      if (value.name != this.page.name) {
+        this.titleUpdated.emit(value.name);
+      } else {
+        this.sectionsUpdated.emit(value.sections);
+      }
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['page'] && !changes['page'].isFirstChange()) {
       this.pageFormGroup.patchValue(this.page, { emitEvent: false });
-      this.sectionsFormArray.clear({ emitEvent: false });
-      this.page.sections.forEach((section) =>
-        this.sectionsFormArray.push(new FormControl(section), {
-          emitEvent: false,
-        })
-      );
+      while (this.sectionsFormArray.length > this.page.sections.length) {
+        this.sectionsFormArray.removeAt(-1, { emitEvent: false });
+      }
+
+      while (this.page.sections.length > this.sectionsFormArray.length) {
+        this.sectionsFormArray.push(
+          this.formBuild.control(
+            this.page.sections[this.sectionsFormArray.length]
+          ),
+          { emitEvent: false }
+        );
+      }
     }
   }
 
