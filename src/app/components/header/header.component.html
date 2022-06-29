@@ -1,0 +1,10 @@
+<header>
+  <nav>
+    <code>{{ user | async | userName }}</code>
+    <ng-container *ngIf="showLoginButton">
+      <button (click)="login()">Log in</button>
+      <button (click)="loginAnonymously()">Log in Anonymously</button>
+    </ng-container>
+    <button (click)="logout()" *ngIf="showLogoutButton">Log out</button>
+  </nav>
+</header>
