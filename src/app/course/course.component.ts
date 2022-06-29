@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Auth, authState } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   combineLatestWith,
   distinctUntilChanged,
+  filter,
   first,
+  from,
   map,
   Observable,
   shareReplay,
@@ -28,8 +31,18 @@ export class CourseComponent implements OnInit {
   public loading$!: Observable<boolean>;
   public pages$!: Observable<Page[]>;
   public page$!: Observable<Page>;
+  public canEdit$: Observable<boolean> = authState(this.auth).pipe(
+    filter(Boolean),
+    tap(console.error.bind(null, '111')),
+    switchMap((user) => from(user.getIdTokenResult())),
+    tap(console.error.bind(null, '222')),
+    map((idToken) => Boolean(idToken.claims['admin'])),
+    tap(console.error.bind(null, '333')),
+    startWith(false)
+  );
 
   constructor(
+    private auth: Auth,
     private courseService: CourseService,
     private pageService: PageService,
     private route: ActivatedRoute,

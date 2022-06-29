@@ -1,4 +1,4 @@
-<button (click)="toggleEditMode()">
+<button *ngIf="canEdit$ | async" (click)="toggleEditMode()">
   {{ editMode ? "Read Mode" : "Edit Mode" }}
 </button>
 <section
